@@ -7,6 +7,7 @@ use App\Entity\Extra;
 use App\Entity\Ingredient;
 use App\Entity\Recipe;
 use App\Entity\Step;
+use App\Repository\RecipeRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -54,5 +55,45 @@ class RecipeController extends AbstractController {
         $manager->flush();
 
         return new Response('Created recipe "' . $recipe->getName() . '"!');
+    }
+
+    public function read(int $id, RecipeRepository $repository): Response {
+        $recipe = $repository->find($id);
+
+        $ingredients = [];
+        foreach($recipe->getIngredients() as $ingredient) {
+            $ingredients[] = [
+                'amount' => $ingredient->getAmount(),
+                'quantity' => $ingredient->getQuantity(),
+                'name' => $ingredient->getName()
+            ];
+        }
+
+        $steps = [];
+        foreach($recipe->getSteps() as $step) {
+            $steps[] = [
+                'index' => $step->getIndex(),
+                'text' => $step->getText()
+            ];
+        }
+
+        $extras = [];
+        foreach($recipe->getExtras() as $extra) {
+            $extras[] =[
+                'text' => $extra->getText()
+            ];
+        }
+
+        $response = [
+            'name' => $recipe->getName(),
+            'people' => $recipe->getPeople(),
+            'preparation_time' => $recipe->getPreparationTime(),
+            'wait_time' => $recipe->getWaitTime(),
+            'ingredients' => $ingredients,
+            'steps' => $steps,
+            'extras' => $extras
+        ];
+
+        return new Response(json_encode($response));
     }
 }

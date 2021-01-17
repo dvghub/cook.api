@@ -5,3 +5,7 @@
 recipe_create:
   path: /recipe/new
   controller: App\Controller\RecipeController::create
+
+recipe_read:
+  path: /recipe/{id}
+  controller: App\Controller\RecipeController::read
