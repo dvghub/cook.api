@@ -17,37 +17,17 @@ class RecipeController extends AbstractController {
 
     public function create(Request $request, EntityManagerInterface $manager): Response {
         $data = $request->toArray();
+        $recipe = $this->fillRecipe(new Recipe(), $data);
 
-        $recipe = new Recipe();
-        $recipe->setName($data['name']);
-        $recipe->setPeople($data['people']);
-        $recipe->setPreparationTime($data['preparation_time']);
-        $recipe->setWaitTime($data['wait_time']);
-
-        foreach($data['ingredients'] as $ingredientData) {
-            $ingredient = new Ingredient();
-            $ingredient->setAmount($ingredientData['amount']);
-            $ingredient->setQuantity($ingredientData['quantity']);
-            $ingredient->setName($ingredientData['name']);
-
-            $recipe->addIngredient($ingredient);
+        foreach($recipe->getIngredients() as $ingredient) {
             $manager->persist($ingredient);
         }
 
-        foreach($data['steps'] as $stepData) {
-            $step = new Step();
-            $step->setIndex($stepData['index']);
-            $step->setText($stepData['text']);
-
-            $recipe->addStep($step);
+        foreach($recipe->getSteps() as $step) {
             $manager->persist($step);
         }
 
-        foreach($data['extras'] as $extraData) {
-            $extra = new Extra();
-            $extra->setText($extraData['text']);
-
-            $recipe->addExtra($extra);
+        foreach($recipe->getExtras() as $extra) {
             $manager->persist($extra);
         }
 
@@ -60,40 +40,66 @@ class RecipeController extends AbstractController {
     public function read(int $id, RecipeRepository $repository): Response {
         $recipe = $repository->find($id);
 
-        $ingredients = [];
+        return new Response(json_encode($recipe->toArray()));
+    }
+
+    public function update(
+        int $id,
+        Request $request,
+        EntityManagerInterface $manager,
+        RecipeRepository $repository
+    ): Response {
+        $data = $request->toArray();
+        $recipe = $this->fillRecipe($repository->find($id), $data);
+
         foreach($recipe->getIngredients() as $ingredient) {
-            $ingredients[] = [
-                'amount' => $ingredient->getAmount(),
-                'quantity' => $ingredient->getQuantity(),
-                'name' => $ingredient->getName()
-            ];
+            $manager->persist($ingredient);
         }
 
-        $steps = [];
         foreach($recipe->getSteps() as $step) {
-            $steps[] = [
-                'index' => $step->getIndex(),
-                'text' => $step->getText()
-            ];
+            $manager->persist($step);
         }
 
-        $extras = [];
         foreach($recipe->getExtras() as $extra) {
-            $extras[] =[
-                'text' => $extra->getText()
-            ];
+            $manager->persist($extra);
         }
 
-        $response = [
-            'name' => $recipe->getName(),
-            'people' => $recipe->getPeople(),
-            'preparation_time' => $recipe->getPreparationTime(),
-            'wait_time' => $recipe->getWaitTime(),
-            'ingredients' => $ingredients,
-            'steps' => $steps,
-            'extras' => $extras
-        ];
+        $manager->persist($recipe);
+        $manager->flush();
 
-        return new Response(json_encode($response));
+        return new Response(json_encode($recipe->toArray()));
+    }
+
+    private function fillRecipe(Recipe $recipe, array $data): Recipe {
+        $recipe->setName($data['name']);
+        $recipe->setPeople($data['people']);
+        $recipe->setPreparationTime($data['preparation_time']);
+        $recipe->setWaitTime($data['wait_time']);
+
+        foreach($data['ingredients'] as $ingredientData) {
+            $ingredient = new Ingredient();
+            $ingredient->setAmount($ingredientData['amount']);
+            $ingredient->setQuantity($ingredientData['quantity']);
+            $ingredient->setName($ingredientData['name']);
+
+            $recipe->addIngredient($ingredient);
+        }
+
+        foreach($data['steps'] as $stepData) {
+            $step = new Step();
+            $step->setIndex($stepData['index']);
+            $step->setText($stepData['text']);
+
+            $recipe->addStep($step);
+        }
+
+        foreach($data['extras'] as $extraData) {
+            $extra = new Extra();
+            $extra->setText($extraData['text']);
+
+            $recipe->addExtra($extra);
+        }
+
+        return $recipe;
     }
 }
