@@ -27,8 +27,7 @@ class RecipeController extends AbstractController {
 
     /** @throws ORMException */
     public function create(Request $request): Response {
-        $json = $request->request->get('recipe');
-        $data = json_decode($json);
+        $data = $request->toArray();
 
         $recipe = new Recipe();
         $recipe->setName($data['name']);
