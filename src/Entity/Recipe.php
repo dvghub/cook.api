@@ -203,4 +203,41 @@ class Recipe
 
         return $this;
     }
+
+    /** @return array<string, mixed> */
+    public function toArray(): array {
+        $ingredients = [];
+        foreach($this->getIngredients() as $ingredient) {
+            $ingredients[] = [
+                'amount' => $ingredient->getAmount(),
+                'quantity' => $ingredient->getQuantity(),
+                'name' => $ingredient->getName()
+            ];
+        }
+
+        $steps = [];
+        foreach($this->getSteps() as $step) {
+            $steps[] = [
+                'index' => $step->getIndex(),
+                'text' => $step->getText()
+            ];
+        }
+
+        $extras = [];
+        foreach($this->getExtras() as $extra) {
+            $extras[] =[
+                'text' => $extra->getText()
+            ];
+        }
+
+        return [
+            'name' => $this->getName(),
+            'people' => $this->getPeople(),
+            'preparation_time' => $this->getPreparationTime(),
+            'wait_time' => $this->getWaitTime(),
+            'ingredients' => $ingredients,
+            'steps' => $steps,
+            'extras' => $extras
+        ];
+    }
 }

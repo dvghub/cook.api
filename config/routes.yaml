@@ -9,3 +9,7 @@ recipe_create:
 recipe_read:
   path: /recipe/{id}
   controller: App\Controller\RecipeController::read
+
+recipe_update:
+  path: /recipe/{id}/update
+  controller: App\Controller\RecipeController::update
