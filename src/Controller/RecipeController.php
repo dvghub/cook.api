@@ -14,7 +14,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 class RecipeController extends AbstractController {
-
     public function create(Request $request, EntityManagerInterface $manager): Response {
         $data = $request->toArray();
         $recipe = $this->fillRecipe(new Recipe(), $data);
@@ -52,22 +51,17 @@ class RecipeController extends AbstractController {
         $data = $request->toArray();
         $recipe = $this->fillRecipe($repository->find($id), $data);
 
-        foreach($recipe->getIngredients() as $ingredient) {
-            $manager->persist($ingredient);
-        }
-
-        foreach($recipe->getSteps() as $step) {
-            $manager->persist($step);
-        }
-
-        foreach($recipe->getExtras() as $extra) {
-            $manager->persist($extra);
-        }
-
-        $manager->persist($recipe);
         $manager->flush();
 
         return new Response(json_encode($recipe->toArray()));
+    }
+
+    public function delete(int $id, EntityManagerInterface $manager, RecipeRepository $repository): Response {
+        $recipe = $repository->find($id);
+        $manager->remove($recipe);
+        $manager->flush();
+
+        return new Response('Deleted recipe "' . $recipe->getName() . '"!');
     }
 
     private function fillRecipe(Recipe $recipe, array $data): Recipe {
