@@ -7,6 +7,7 @@ use App\Entity\Extra;
 use App\Entity\Ingredient;
 use App\Entity\Recipe;
 use App\Entity\Step;
+use App\Entity\Tag;
 use App\Repository\RecipeRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -30,6 +31,10 @@ class RecipeController extends AbstractController {
             $manager->persist($extra);
         }
 
+        foreach($recipe->getTags() as $tag) {
+            $manager->persist($tag);
+        }
+
         $manager->persist($recipe);
         $manager->flush();
 
@@ -49,8 +54,39 @@ class RecipeController extends AbstractController {
         RecipeRepository $repository
     ): Response {
         $data = $request->toArray();
-        $recipe = $this->fillRecipe($repository->find($id), $data);
+        $recipe = $repository->find($id);
+        $updatedRecipe = $this->fillRecipe(new Recipe(), $data);
 
+        $recipe->setName($updatedRecipe->getName());
+        $recipe->setPeople($updatedRecipe->getPeople());
+        $recipe->setPreparationTime($updatedRecipe->getPreparationTime());
+        $recipe->setWaitTime($updatedRecipe->getWaitTime());
+
+        foreach($recipe->getIngredients() as $ingredient) { $recipe->removeIngredient($ingredient); }
+        foreach($updatedRecipe->getIngredients() as $ingredient) {
+            $manager->persist($ingredient);
+            $recipe->addIngredient($ingredient);
+        }
+
+        foreach($recipe->getSteps() as $step) { $recipe->removeStep($step); }
+        foreach($updatedRecipe->getSteps() as $step) {
+            $manager->persist($step);
+            $recipe->addStep($step);
+        }
+
+        foreach($recipe->getExtras() as $extra) { $recipe->removeExtra($extra); }
+        foreach($updatedRecipe->getExtras() as $extra) {
+            $manager->persist($extra);
+            $recipe->addExtra($extra);
+        }
+
+        foreach($recipe->getTags() as $tag) { $recipe->removeTag($tag); }
+        foreach($updatedRecipe->getTags() as $tag) {
+            $manager->persist($tag);
+            $recipe->addTag($tag);
+        }
+
+        $manager->persist($recipe);
         $manager->flush();
 
         return new Response(json_encode($recipe->toArray()));
@@ -92,6 +128,13 @@ class RecipeController extends AbstractController {
             $extra->setText($extraData['text']);
 
             $recipe->addExtra($extra);
+        }
+
+        foreach($data['tags'] as $tagData) {
+            $tag = new Tag();
+            $tag->setName($tagData['name']);
+
+            $recipe->addTag($tag);
         }
 
         return $recipe;

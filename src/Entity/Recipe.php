@@ -54,11 +54,17 @@ class Recipe
      */
     private $extras;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Tag::class, mappedBy="recipe", orphanRemoval=true)
+     */
+    private $tags;
+
     public function __construct()
     {
         $this->ingredients = new ArrayCollection();
         $this->steps = new ArrayCollection();
         $this->extras = new ArrayCollection();
+        $this->tags = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -204,6 +210,36 @@ class Recipe
         return $this;
     }
 
+    /**
+     * @return Collection|Tag[]
+     */
+    public function getTags(): Collection
+    {
+        return $this->tags;
+    }
+
+    public function addTag(Tag $tag): self
+    {
+        if (!$this->tags->contains($tag)) {
+            $this->tags[] = $tag;
+            $tag->setRecipe($this);
+        }
+
+        return $this;
+    }
+
+    public function removeTag(Tag $tag): self
+    {
+        if ($this->tags->removeElement($tag)) {
+            // set the owning side to null (unless already changed)
+            if ($tag->getRecipe() === $this) {
+                $tag->setRecipe(null);
+            }
+        }
+
+        return $this;
+    }
+
     /** @return array<string, mixed> */
     public function toArray(): array {
         $ingredients = [];
@@ -225,8 +261,15 @@ class Recipe
 
         $extras = [];
         foreach($this->getExtras() as $extra) {
-            $extras[] =[
+            $extras[] = [
                 'text' => $extra->getText()
+            ];
+        }
+
+        $tags = [];
+        foreach($this->getTags() as $tag) {
+            $tags[] = [
+                'name' => $tag->getName()
             ];
         }
 
@@ -237,7 +280,8 @@ class Recipe
             'wait_time' => $this->getWaitTime(),
             'ingredients' => $ingredients,
             'steps' => $steps,
-            'extras' => $extras
+            'extras' => $extras,
+            'tags' => $tags
         ];
     }
 }
