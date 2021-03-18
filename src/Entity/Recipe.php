@@ -6,6 +6,7 @@ use App\Repository\RecipeRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass=RecipeRepository::class)
@@ -16,46 +17,55 @@ class Recipe
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
+     * @Groups("recipe")
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups("recipe")
      */
     private $name;
 
     /**
      * @ORM\Column(type="integer", nullable=true)
+     * @Groups("recipe")
      */
     private $people;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
+     * @Groups("recipe")
      */
     private $preparationTime;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
+     * @Groups("recipe")
      */
     private $waitTime;
 
     /**
      * @ORM\OneToMany(targetEntity=Ingredient::class, mappedBy="recipe", orphanRemoval=true)
+     * @Groups("recipe")
      */
     private $ingredients;
 
     /**
      * @ORM\OneToMany(targetEntity=Step::class, mappedBy="recipe", orphanRemoval=true)
+     * @Groups("recipe")
      */
     private $steps;
 
     /**
      * @ORM\OneToMany(targetEntity=Extra::class, mappedBy="recipe", orphanRemoval=true)
+     * @Groups("recipe")
      */
     private $extras;
 
     /**
      * @ORM\OneToMany(targetEntity=Tag::class, mappedBy="recipe", orphanRemoval=true)
+     * @Groups("recipe")
      */
     private $tags;
 
