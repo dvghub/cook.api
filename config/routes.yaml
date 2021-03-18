@@ -1,19 +1,25 @@
-#index:
-#    path: /
-#    controller: App\Controller\DefaultController::index
-
 recipe_create:
   path: /recipe/new
   controller: App\Controller\RecipeController::create
+  methods: PUT
 
 recipe_read:
   path: /recipe/{id}
   controller: App\Controller\RecipeController::read
+  methods: GET
 
 recipe_update:
   path: /recipe/{id}/update
   controller: App\Controller\RecipeController::update
+  methods: PUT
 
 recipe_delete:
   path: /recipe/{id}/delete
   controller: App\Controller\RecipeController::delete
+  methods: DELETE
+
+recipe_all:
+  path: /recipes
+  controller: App\Controller\RecipeController::all
+  methods: GET
+

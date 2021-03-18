@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Repository\ExtraRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass=ExtraRepository::class)
@@ -14,11 +15,13 @@ class Extra
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
+     * @Groups("recipe")
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups("recipe")
      */
     private $text;
 

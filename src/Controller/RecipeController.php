@@ -13,6 +13,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Serializer\SerializerInterface;
 
 class RecipeController extends AbstractController {
     public function create(Request $request, EntityManagerInterface $manager): Response {
@@ -39,6 +40,10 @@ class RecipeController extends AbstractController {
         $manager->flush();
 
         return new Response('Created recipe "' . $recipe->getName() . '"!');
+    }
+
+    public function all(RecipeRepository $repository, SerializerInterface $serializer): Response {
+        return new Response($serializer->serialize($repository->findAll(), 'json', ['groups' => 'recipe']));
     }
 
     public function read(int $id, RecipeRepository $repository): Response {
