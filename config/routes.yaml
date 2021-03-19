@@ -1,20 +1,20 @@
 recipe_create:
-  path: /recipe/new
+  path: /recipes/new
   controller: App\Controller\RecipeController::create
   methods: POST
 
 recipe_read:
-  path: /recipe/{id}
+  path: /recipes/{id}
   controller: App\Controller\RecipeController::read
   methods: GET
 
 recipe_update:
-  path: /recipe/{id}/update
+  path: /recipes/{id}/update
   controller: App\Controller\RecipeController::update
   methods: POST
 
 recipe_delete:
-  path: /recipe/{id}/delete
+  path: /recipes/{id}/delete
   controller: App\Controller\RecipeController::delete
   methods: DELETE
 
