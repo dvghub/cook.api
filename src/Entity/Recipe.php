@@ -17,13 +17,13 @@ class Recipe
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
-     * @Groups("recipe")
+     * @Groups({"recipe", "list"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups("recipe")
+     * @Groups({"recipe", "list"})
      */
     private $name;
 
@@ -35,13 +35,13 @@ class Recipe
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
-     * @Groups("recipe")
+     * @Groups({"recipe"})
      */
     private $preparationTime;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
-     * @Groups("recipe")
+     * @Groups({"recipe"})
      */
     private $waitTime;
 
@@ -65,7 +65,7 @@ class Recipe
 
     /**
      * @ORM\OneToMany(targetEntity=Tag::class, mappedBy="recipe", orphanRemoval=true)
-     * @Groups("recipe")
+     * @Groups({"recipe", "list"})
      */
     private $tags;
 
