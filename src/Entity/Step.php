@@ -20,12 +20,6 @@ class Step
     private $id;
 
     /**
-     * @ORM\Column(type="integer")
-     * @Groups("recipe")
-     */
-    private $index;
-
-    /**
      * @ORM\Column(type="string", length=255)
      * @Groups("recipe")
      */
@@ -40,18 +34,6 @@ class Step
     public function getId(): ?int
     {
         return $this->id;
-    }
-
-    public function getIndex(): ?int
-    {
-        return $this->index;
-    }
-
-    public function setIndex(int $index): self
-    {
-        $this->index = $index;
-
-        return $this;
     }
 
     public function getText(): ?string
