@@ -23,3 +23,8 @@ recipe_all:
   controller: App\Controller\RecipeController::all
   methods: GET
 
+recipe_list:
+  path: /recipes/list
+  controller: App\Controller\RecipeController::list
+  methods: GET
+

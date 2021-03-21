@@ -47,6 +47,10 @@ class RecipeController extends AbstractController {
         return new Response($serializer->serialize($repository->findAll(), 'json', [ 'groups' => 'recipe' ]));
     }
 
+    public function list(RecipeRepository $repository, SerializerInterface $serializer): Response {
+        return new Response($serializer->serialize($repository->findAll(), 'json', ['groups' => 'list']));
+    }
+
     public function read(Recipe $recipe, SerializerInterface $serializer): Response {
         return new Response($serializer->serialize($recipe, 'json', [ 'groups' => 'recipe' ]));
     }
@@ -101,7 +105,7 @@ class RecipeController extends AbstractController {
         $manager->persist($recipe);
         $manager->flush();
 
-        return new Response($serializer->serialize($recipe, 'json', ['groups' => 'recipe']));
+        return new Response($serializer->serialize($recipe, 'json', [ 'groups' => 'recipe' ]));
     }
 
     public function delete(Recipe $recipe, EntityManagerInterface $manager): Response {

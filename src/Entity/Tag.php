@@ -15,13 +15,13 @@ class Tag
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
-     * @Groups("recipe")
+     * @Groups({"recipe", "list"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups("recipe")
+     * @Groups({"recipe", "list"})
      */
     private $name;
 
