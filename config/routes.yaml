@@ -9,12 +9,12 @@ recipe_read:
   methods: GET
 
 recipe_update:
-  path: /recipes/{id}/update
+  path: /recipes/{id}
   controller: App\Controller\RecipeController::update
   methods: POST
 
 recipe_delete:
-  path: /recipes/{id}/delete
+  path: /recipes/{id}
   controller: App\Controller\RecipeController::delete
   methods: DELETE
 
