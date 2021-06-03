@@ -40,7 +40,7 @@ class RecipeController extends AbstractController {
         $manager->persist($recipe);
         $manager->flush();
 
-        return new Response('Created recipe "' . $recipe->getName() . '"!');
+        return new Response();
     }
 
     public function all(RecipeRepository $repository, SerializerInterface $serializer): Response {
@@ -112,6 +112,6 @@ class RecipeController extends AbstractController {
         $manager->remove($recipe);
         $manager->flush();
 
-        return new Response('Deleted recipe "' . $recipe->getName() . '"!');
+        return new Response();
     }
 }
